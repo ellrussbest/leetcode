@@ -23,7 +23,7 @@ class Solution {
     }
 };
 
-// overload string insertion operator
+// overload stream insertion operator
 std::ostream& operator<<(std::ostream& out, const std::vector<std::string>& v) {
     out << "{";
     for (char sep[]{0, ' ', 0}; const auto& el : v)
