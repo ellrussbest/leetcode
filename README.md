@@ -13,7 +13,9 @@ The folder structure for this repository is organized as follows:
 │   
 ├── leetcode_75
 │   
-└── top_interview_150
+├── top_interview_150
+│   
+└── top_mentions
 ```
 
 - **general**: This folder contains problems categorized by difficulty levels:
@@ -25,6 +27,7 @@ The folder structure for this repository is organized as follows:
   
 - **top_interview_150**: This folder contains solutions from the "Top Interview Questions" list, which includes the most commonly asked Leetcode interview questions.
 
+- **top_mentions**: These are not official LeetCode questions, but they are worth exploring.
 ---
 
 ### Problem Naming Convention
