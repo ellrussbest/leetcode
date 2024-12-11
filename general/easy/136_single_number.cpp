@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <iostream>
-#include <set>
+#include <unordered_set>
 #include <vector>
 
 class Solution {
@@ -12,18 +12,12 @@ class Solution {
     }
 
     int singleNumber_bruteforce(const std::vector<int>& nums) {
-        std::set<int> m_set;
-
+        std::unordered_set<int> set;
         for (const auto& num : nums) {
-            if (auto it = m_set.lower_bound(num);
-                it == m_set.end() || *it > num) {
-                m_set.emplace_hint(it, num);
-            } else {
-                m_set.erase(it);
-            }
+            auto [it, success] = set.emplace(num);
+            if (!success) set.erase(it);
         }
-
-        return *m_set.begin();
+        return *set.begin();
     }
 };
 
