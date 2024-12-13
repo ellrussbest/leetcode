@@ -5,14 +5,16 @@
 class Solution {
    public:
     bool isValid(const std::string& s) {
+        static std::unordered_map<char, char> pairs{
+            {')', '('},
+            {'}', '{'},
+            {']', '['},
+        };
         std::stack<char> st;
 
         for (const auto& c : s) {
-            if (is_closing_brackets(c)) {
-                if (st.empty()) return false;
-
-                auto it = m_pairs.find(c);
-                if (it->second != st.top()) return false;
+            if (auto it = pairs.find(c); it != pairs.end()) {
+                if (st.empty() || it->second != st.top()) return false;
                 st.pop();
             } else {
                 st.emplace(c);
@@ -21,18 +23,6 @@ class Solution {
 
         return st.empty();
     }
-
-   private:
-    bool is_closing_brackets(const char& c) {
-        return c == '}' || c == ')' || c == ']';
-    }
-
-   private:
-    std::unordered_map<char, char> m_pairs{
-        {'}', '{'},
-        {')', '('},
-        {']', '['},
-    };
 };
 
 int main() {
