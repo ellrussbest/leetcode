@@ -3,20 +3,18 @@
 #include <vector>
 
 class Solution {
-   public:
+public:
     std::vector<std::string> fizzBuzz(int n) {
-        std::vector<std::string> res(static_cast<size_t>(n));
+        size_t N = static_cast<size_t>(n);
+        std::vector<std::string> res(N);
 
-        int count = 1;
-        while (count <= n) {
-            std::string el{};
+        for(size_t i = 0; i < N; ++i) {
+            std::string s{};
 
-            if (count % 3 == 0) el += "Fizz";
-            if (count % 5 == 0) el += "Buzz";
-            if (el.size() == 0) el += std::to_string(count);
-
-            *(res.begin() + count - 1) = std::move(el);
-            ++count;
+            if((i + 1) % 3 == 0) s += "Fizz";
+            if((i + 1) % 5 == 0) s += "Buzz";
+            if(s.size() == 0) s += std::to_string((i + 1));
+            res[i] = std::move(s);
         }
 
         return res;

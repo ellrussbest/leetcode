@@ -3,15 +3,13 @@
 #include <vector>
 
 class Solution {
-   public:
+public:
     void reverseString(std::vector<char>& s) {
         auto first = s.begin();
-        auto last = s.rbegin();
+        auto last = s.end();
 
-        while (first < last.base()) {
-            std::iter_swap(first, last);
-            ++first, ++last;
-        }
+        while(first != last && first != --last)
+            std::iter_swap(first++, last);
     }
 };
 

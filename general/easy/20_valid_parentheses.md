@@ -1,27 +1,36 @@
 # isValid Solution: Intuition
 
-This solution validates if a string containing brackets (i.e., parentheses `()`, square brackets `[]`, and curly braces `{}`) is correctly balanced. The solution uses a **stack** to ensure that each closing bracket corresponds to the most recent unmatched opening bracket, following the Last In, First Out (LIFO) principle.
+This solution checks if a string containing parentheses is valid, meaning each opening parenthesis has a corresponding closing parenthesis, and the pairs are correctly nested. The solution uses a stack to track unmatched opening parentheses and matches them with closing ones as they appear.
 
 ## Step-by-Step Explanation:
 
-### 1. **Initialize a Stack**:
-   A stack is used to track the opening brackets as they appear. The stack will help ensure that each closing bracket matches the latest opening bracket.
+1. **Pair Mapping**:
+   - A static `unordered_map` named `pairs` is used to map each closing parenthesis to its corresponding opening parenthesis. This helps in quickly finding the matching opening parenthesis when we encounter a closing parenthesis in the string.
+
+   ```cpp
+   static std::unordered_map<char, char> pairs{
+       {')', '('},
+       {'}', '{'},
+       {']', '['},
+   };
+   ```
+
+2. **Stack Initialization**:
+   - A stack `st` is used to track opening parentheses. When we encounter an opening parenthesis (`'('`, `'{'`, `'['`), it is pushed onto the stack.
 
    ```cpp
    std::stack<char> st;
    ```
 
-### 2. **Iterate Over the String**:
-   We iterate over each character in the string `s`. For each character:
-   - If it's a closing bracket (`}`, `)`, `]`), we check if there is a corresponding opening bracket in the stack.
-   - If it's an opening bracket (`{`, `(`, `[`), we push it onto the stack.
+3. **Iterate Through String**:
+   - For each character `c` in the input string `s`:
+     - If `c` is a closing parenthesis (i.e., it exists in the `pairs` map), check if the stack is empty or if the top of the stack does not match the corresponding opening parenthesis. If either condition is true, the string is invalid, and we return `false`.
+     - If `c` is an opening parenthesis, push it onto the stack.
 
    ```cpp
    for (const auto& c : s) {
-       if (is_closing_brackets(c)) {
-           if (st.empty()) return false;
-           auto it = m_pairs.find(c);
-           if (it->second != st.top()) return false;
+       if (auto it = pairs.find(c); it != pairs.end()) {
+           if (st.empty() || it->second != st.top()) return false;
            st.pop();
        } else {
            st.emplace(c);
@@ -29,62 +38,28 @@ This solution validates if a string containing brackets (i.e., parentheses `()`,
    }
    ```
 
-### 3. **Check for Matching Brackets**:
-   - If a closing bracket is found, the algorithm checks if the stack is not empty and if the top of the stack matches the corresponding opening bracket for the current closing bracket.
-   - If they don't match, the string is invalid, and the function returns `false`.
-
-   ```cpp
-   if (st.empty()) return false;
-   auto it = m_pairs.find(c);
-   if (it->second != st.top()) return false;
-   st.pop();
-   ```
-
-### 4. **Return the Result**:
-   After iterating through the entire string, the function checks if the stack is empty. If the stack is empty, all brackets have been correctly matched and closed, so the string is valid. Otherwise, the string is invalid.
+4. **Final Check**:
+   - After processing all characters, if the stack is empty, it means all parentheses have been matched, and we return `true`. If the stack is not empty, it indicates unmatched opening parentheses, and we return `false`.
 
    ```cpp
    return st.empty();
    ```
 
-### 5. **Helper Function - is_closing_brackets**:
-   The function `is_closing_brackets` determines if a character is a closing bracket. This helps streamline the main logic by separating the check for closing brackets into its own function.
-
-   ```cpp
-   bool is_closing_brackets(const char& c) {
-       return c == '}' || c == ')' || c == ']';
-   }
-   ```
-
-### 6. **Bracket Pair Mapping**:
-   A hash map (`unordered_map`) is used to store the pairs of matching brackets. This allows quick lookup for matching opening brackets when processing closing brackets.
-
-   ```cpp
-   std::unordered_map<char, char> m_pairs{
-       {'}', '{'},
-       {')', '('},
-       {']', '['},
-   };
-   ```
+5. **Time and Space Complexity**:
+   - **Time Complexity**: The time complexity is **O(n)**, where `n` is the length of the string. We iterate over each character in the string once, and the operations with the stack (push, pop, top) are all constant time operations.
+   - **Space Complexity**: The space complexity is **O(n)** due to the stack used to store unmatched opening parentheses.
 
 ## Key Insights:
 
-- **Stack-Based Approach**:
-  - The stack efficiently ensures that the brackets are matched in the correct order. Every time a closing bracket is encountered, the stack provides the most recent unmatched opening bracket to check for a valid pair.
-  
-- **Early Exit**:
-  - If a mismatch is found early (either a closing bracket without a corresponding opening bracket or a mismatch between brackets), the function returns `false` immediately, optimizing performance.
-  
-- **Edge Case Handling**:
-  - If the string contains any unbalanced brackets or mismatched pairs, the algorithm correctly returns `false`.
-  - If the string is empty or all brackets are correctly matched, the function returns `true`.
+- **Stack Usage**:
+  - The stack is essential for efficiently tracking and matching opening and closing parentheses. As we encounter a closing parenthesis, we simply pop the corresponding opening parenthesis from the stack if it matches. If not, the string is immediately deemed invalid.
 
-## Time and Space Complexity:
+- **Efficient Lookup**:
+  - The use of `unordered_map` for storing matching pairs allows for efficient lookup when processing each character in the string. This avoids the need for nested loops or more complex matching logic.
 
-- **Time Complexity**: The algorithm runs in **O(n)** time, where `n` is the length of the string. Each character is processed once, and each stack operation (push or pop) takes constant time.
-  
-- **Space Complexity**: The space complexity is **O(n)**, where `n` is the maximum depth of the stack. In the worst case, when all characters are opening brackets, the stack will hold all of them.
+- **Edge Cases**:
+  - The solution handles edge cases like unmatched parentheses and incorrect nesting efficiently. For example, the input `"(]"` returns `false`, indicating invalid parentheses.
 
 ## Final Thoughts:
 
-The stack-based approach is an efficient way to solve the problem of validating bracket balance. By leveraging the LIFO property of stacks, the solution ensures that brackets are matched and closed in the correct order. This solution has optimal time and space complexity for this problem, making it suitable for large inputs.
+This `isValid` solution efficiently checks if the parentheses in a string are balanced in **O(n)** time and **O(n)** space. It leverages the stack data structure and a hash map for constant-time matching of parentheses, providing a simple yet effective approach for this problem.
