@@ -1,81 +1,74 @@
 #include <iostream>
+#include <iterator>
 
 class Solution {
    public:
     std::string longestPalindrome(const std::string& s) {
-        auto right = s.end();
-        auto left = s.end();
-        long int max_len = 0;
+        auto first = s.end();
+        auto last = s.end();
 
-        for (auto i = s.begin(); i != s.end(); ++i) {
-            auto [odd_len, odd_left, odd_right] = expand_around_center(i, s);
-            auto [even_len, even_left, even_right] =
-                expand_around_center(i, s, true);
+        for (auto it = s.begin(); it != s.end(); ++it) {
+            auto [odd_len, odd_start, odd_end] = expand_around_center(it, s);
+            auto [even_len, even_start, even_end] =
+                expand_around_center(it, s, true);
 
-            if (odd_len > max_len) {
-                max_len = odd_len;
-                left = odd_left;
-                right = odd_right;
+            if (odd_len > std::distance(first, last)) {
+                first = odd_start;
+                last = odd_end;
             }
 
-            if (even_len > max_len) {
-                max_len = even_len;
-                left = even_left;
-                right = even_right;
+            if (even_len > std::distance(first, last)) {
+                first = even_start;
+                last = even_end;
             }
         }
 
-        return {left, right};
+        return {first, last};
     }
 
     std::string longestPalindrome_bruteforce(const std::string& s) {
-        if (s.size() == 1) return s;
+        auto res = std::string{};
 
-        auto is_palindrome = [](const auto& substr) {
-            auto left = substr.begin();
-            auto right = substr.rbegin();
-
-            while (left < right.base()) {
-                if (*left != *right) return false;
-                ++left, ++right;
-            }
-
-            return true;
-        };
-
-        std::string res{};
-
-        for (size_t i = 0; i < s.size(); ++i) {
-            std::string substr{};
-            for (size_t j = i; j < s.size(); ++j) {
-                substr += s[j];
-                if (is_palindrome(substr) && substr.size() > res.size()) {
+        for (auto i = s.begin(); i != s.end(); ++i) {
+            auto substr = std::string{};
+            for (auto j = i; j != s.end(); ++j) {
+                substr += *j;
+                if (is_palindrome(substr.begin(), substr.end()) &&
+                    substr.size() > res.size())
                     res = substr;
-                }
             }
         }
-
         return res;
     }
 
    private:
     template <typename BidirIt>
-    std::tuple<long int, BidirIt, BidirIt> expand_around_center(
-        BidirIt right, const std::string& s, bool is_even = false) {
+    std::tuple<long int, BidirIt, BidirIt> 
+    expand_around_center(BidirIt center, const std::string& s, bool is_even = false) {
+        auto& right = center;
         auto left = --std::make_reverse_iterator(right);
         if (is_even) ++right;
 
-        while (left != s.rend() && right != s.end() && *left == *right) {
+        while (left != s.rend() && right != s.end()) {
+            if (*left != *right) break;
             ++left, ++right;
         }
 
         return {std::distance(left.base(), right), left.base(), right};
     }
+
+    template <typename BidirIt>
+    bool is_palindrome(BidirIt first, BidirIt last) {
+        while (first != last && first != --last)
+            if (*first++ != *last) return false;
+        return true;
+    }
 };
 
 int main() {
-    std::cout << Solution{}.longestPalindrome("babad") << "\n";
-    std::cout << Solution{}.longestPalindrome("cbbd") << "\n";
     std::cout << Solution{}.longestPalindrome_bruteforce("babad") << "\n";
     std::cout << Solution{}.longestPalindrome_bruteforce("cbbd") << "\n";
+
+    std::cout << Solution{}.longestPalindrome("babad") << "\n";
+    std::cout << Solution{}.longestPalindrome("cbbd") << "\n";
 }

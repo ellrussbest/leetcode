@@ -5,44 +5,35 @@
 class Solution {
    public:
     int lengthOfLongestSubstring(const std::string& s) {
-        std::unordered_set<char> char_set;
-        int max = 0;
+        std::unordered_set<char> set;
+        size_t max_len = 0;
 
-        for (size_t i = 0, j = 0; j < s.size(); ++j) {
-            auto it = char_set.find(s[j]);
-
-            while (it != char_set.end()) {
-                char_set.erase(it);
-                it = char_set.find(s[i]);
-                ++i;
+        for(size_t i = 0, j = 0; j < s.size(); ++j) {
+            auto it = set.find(s[j]);
+            
+            while(it != set.end()) {
+                set.erase(it);
+                it = set.find(s[i++]);
             }
 
-            char_set.insert(s[j]);
-            max = std::max(max, static_cast<int>(j - i + 1));
+            set.emplace(s[j]);
+            max_len = std::max(max_len, j - i + 1);
         }
 
-        return max;
+        return static_cast<int>(max_len);
     }
 
     int lengthOfLongestSubstring_bruteforce(const std::string& s) {
-        if (s.size() == 0) return 0;
-        if (s.size() == 1) return 1;
-
-        int max{};
-
-        for (size_t i = 0; i < s.size(); ++i) {
-            std::string substr{};
-
-            for (size_t j = i; j < s.size(); ++j) {
-                if (!substr.contains(s[j])) {
-                    substr += s[j];
-                    max = std::max(max, static_cast<int>(substr.size()));
-                } else
-                    break;
+        size_t max_len = 0;
+        for(auto i = s.begin(); i != s.end(); ++i) {
+            auto substr = std::string{};
+            for(auto j = i; j != s.end(); ++j) {
+                if(substr.contains(*j)) break;
+                substr += *j;
+                max_len = std::max(max_len, substr.size());
             }
         }
-
-        return max;
+        return static_cast<int>(max_len);
     }
 };
 
