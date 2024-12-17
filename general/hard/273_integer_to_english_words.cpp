@@ -54,15 +54,15 @@ class Solution {
     }
 
    private:
-    static constexpr std::array<const char*, 4> thousands{
+    static inline std::array<const char*, 4> thousands{
         {"", "Thousand", "Million", "Billion"}};
-    static constexpr std::array<const char*, 20> less_than_twenty{{
+    static inline std::array<const char*, 20> less_than_twenty{{
         "",        "One",     "Two",       "Three",    "Four",
         "Five",    "Six",     "Seven",     "Eight",    "Nine",
         "Ten",     "Eleven",  "Twelve",    "Thirteen", "Fourteen",
         "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen",
     }};
-    static constexpr std::array<const char*, 10> tens = {{
+    static inline std::array<const char*, 10> tens = {{
         "",
         "",
         "Twenty",
