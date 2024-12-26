@@ -7,7 +7,8 @@ class Solution {
    public:
     int singleNumber(const std::vector<int>& nums) {
         int res{};
-        for (const auto& num : nums) res = res ^ num;
+        for (const auto& num : nums)
+            res ^= num;
         return res;
     }
 

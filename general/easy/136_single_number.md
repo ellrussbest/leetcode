@@ -17,7 +17,8 @@ This solution solves the problem of finding the number that appears only once in
    We iterate through the input vector `nums`, applying the XOR operator on `res` and each number `num` in the list.
 
    ```cpp
-   for (const auto& num : nums) res = res ^ num;
+   for (const auto& num : nums)
+      res ^= num;
    ```
 
    The key property of XOR is that it satisfies the following:

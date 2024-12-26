@@ -30,7 +30,8 @@ This solution checks if a string containing parentheses is valid, meaning each o
    ```cpp
    for (const auto& c : s) {
        if (auto it = pairs.find(c); it != pairs.end()) {
-           if (st.empty() || it->second != st.top()) return false;
+           if (st.empty() || it->second != st.top())
+            return false;
            st.pop();
        } else {
            st.emplace(c);
