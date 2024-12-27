@@ -6,7 +6,8 @@ class Solution {
    public:
     double myPow(double x, int n) {
         if (n == 0) return 1;
-        if (float_eq_to(x, 1) || float_eq_to(x, 0)) return x;
+        if (float_eq_to(x, 1) || float_eq_to(x, 0)) 
+            return x;
 
         long y = n;
 
@@ -17,7 +18,8 @@ class Solution {
 
         double res = 1;
         while (y) {
-            if (y % 2 == 1) res *= x;
+            if (y % 2 == 1) 
+                res *= x;
             x *= x;
             y /= 2;
         }

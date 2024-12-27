@@ -16,7 +16,8 @@ class Solution {
             std::sort(key.begin(), key.end());
             auto [it, success] =
                 m_map.try_emplace(key, std::vector<std::string>{strs[i]});
-            if (!success) it->second.emplace_back(strs[i]);
+            if (!success) 
+                it->second.emplace_back(strs[i]);
         }
 
         for (auto& [key, val] : m_map) res.emplace_back(std::move(val));

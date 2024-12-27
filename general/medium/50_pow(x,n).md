@@ -14,7 +14,8 @@ This solution calculates `x` raised to the power of `n` (i.e., `x^n`). It uses t
    - The second condition checks if `x` is either 1 or 0. If `x` is 1, any power of 1 will always be 1, so we can immediately return 1. Similarly, if `x` is 0, we return `x` (since `0^n = 0` for any non-zero `n`).
    
    ```cpp
-   if (float_eq_to(x, 1) || float_eq_to(x, 0)) return x;
+   if (float_eq_to(x, 1) || float_eq_to(x, 0)) 
+    return x;
    ```
 
 ### 2. **Handle Negative Exponent**:

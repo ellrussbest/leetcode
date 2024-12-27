@@ -50,7 +50,8 @@ For example:
        auto key = strs[i];          // Make a copy of the string
        std::sort(key.begin(), key.end());  // Sort the string to use as the key
        auto [it, success] = m_map.try_emplace(key, std::vector<std::string>{strs[i]});
-       if (!success) it->second.emplace_back(strs[i]);
+       if (!success) 
+         it->second.emplace_back(strs[i]);
    }
    ```
 
