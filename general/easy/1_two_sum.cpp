@@ -1,20 +1,22 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
-#include <unordered_map>
+#include <map>
 #include <vector>
 
 class Solution {
    public:
     std::vector<int> twoSum(const std::vector<int>& nums, int target) {
-        std::unordered_map<int, size_t> m_map;
+        std::map<int, size_t> m_map;
 
         for (size_t i = 0; i < nums.size(); ++i) {
-            if (auto it = m_map.find(nums[i]); it != m_map.end())
+            auto it = m_map.lower_bound(nums[i]);
+
+            if (it != m_map.end() && !(nums[i] < it->first))
                 return {static_cast<int>(it->second), static_cast<int>(i)};
 
             auto complement = target - nums[i];
-            m_map.try_emplace(complement, i);
+            m_map.emplace_hint(it, complement, i);
         }
 
         return {};
