@@ -30,7 +30,25 @@
 class Solution {
     public:
         int maxLen(const std::vector<int>& numbers) {
-            // optimized solution here
+            std::unordered_map<int, int> presum;
+
+            int sum = 0;
+            int max_len = 0;
+
+            for(size_t i = 0; i < numbers.size(); ++i) {
+                sum += numbers[i];
+                int idx = static_cast<int>(i);
+
+                if(sum == 0)
+                    max_len = idx + 1;
+                
+                if(auto it = presum.find(sum); it != presum.end())
+                    max_len = std::max(max_len, idx - it->second);
+                else
+                    presum.emplace(sum, idx);
+            }
+
+            return max_len;
         }
 
         int maxLen_bruteforce(const std::vector<int>& numbers) {
