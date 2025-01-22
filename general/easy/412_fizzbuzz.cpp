@@ -11,9 +11,12 @@ public:
         for(size_t i = 0; i < N; ++i) {
             std::string s{};
 
-            if((i + 1) % 3 == 0) s += "Fizz";
-            if((i + 1) % 5 == 0) s += "Buzz";
-            if(s.size() == 0) s += std::to_string((i + 1));
+            if((i + 1) % 3 == 0)
+                s += "Fizz";
+            if((i + 1) % 5 == 0)
+                s += "Buzz";
+            if(s.size() == 0)
+                s += std::to_string((i + 1));
             res[i] = std::move(s);
         }
 
