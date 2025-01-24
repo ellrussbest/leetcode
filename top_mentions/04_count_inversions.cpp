@@ -16,6 +16,12 @@
  *
  * Input arr[] = [1, 2, 3]
  * Output: 0
+ *
+ * Input arr[] = [4, 3, 2, 1]
+ * Output: 6
+ *
+ * Input arr[] = {3, 5, 1, 10, 9, 2, 6, 8}
+ * Output: 11
  */
 
 #include <algorithm>
@@ -26,18 +32,26 @@ template <typename BidirIt>
 long int merge_sort(BidirIt first, BidirIt last) {
     auto dist = std::distance(first, last);
 
-    if (dist <= 1) return 0;
+    if (dist <= 1)
+        return 0;
 
     auto middle = std::next(first, dist / 2);
     auto left = merge_sort(first, middle);
     auto right = merge_sort(middle, last);
+    auto count = left + right;
 
-    auto it = std::prev(middle);
-    it = std::lower_bound(middle, last, *it);
-    auto len = std::distance(middle, it);
+    // custom inplace_merge
+    while(first != middle && middle != last) {
+        if(!(*middle < *first))
+            ++first;
+        else{
+            first = std::rotate(first, middle, std::next(middle));
+            ++middle;
+            count += std::distance(first, middle);
+        }
+    }
 
-    std::inplace_merge(first, middle, last);
-    return left + right + len;
+    return count;
 }
 
 auto count_inversions(std::vector<int>&& arr) {
@@ -50,4 +64,6 @@ int main() {
     std::cout << count_inversions({1, 2, 3}) << "\n";
     std::cout << count_inversions({1, 1, 2, 3}) << "\n";
     std::cout << count_inversions({5, 5, 5, 5}) << "\n";
+    std::cout << count_inversions({4, 3, 2, 1}) << "\n";
+    std::cout << count_inversions({3, 5, 1, 10, 9, 2, 6, 8}) << "\n";
 }
