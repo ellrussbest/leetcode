@@ -9,7 +9,8 @@ class Solution {
         for(const auto& s : strs) {
             while(!s.starts_with(res)) {
                 res.pop_back();
-                if(res.empty()) return res;
+                if(res.empty())
+                    return res;
             }
         }
 
