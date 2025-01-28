@@ -1,74 +1,56 @@
 # Merge Sorted Arrays: Intuition
 
-This solution merges two sorted arrays `nums1` and `nums2` into a single sorted array. It utilizes an efficient approach with the **lower bound** and **shifting** techniques to maintain the sorted order while minimizing the number of operations.
+This solution merges two sorted arrays `nums1` and `nums2` into a single sorted array. The approach leverages an **in-place merge** technique using `std::inplace_merge`, making the algorithm both time-efficient and space-efficient.
 
 ## Step-by-Step Explanation:
 
 ### 1. **Initial Setup**:
-   - The first array, `nums1`, has enough space to accommodate all elements from both `nums1` and `nums2`. The variable `m` represents the number of elements in the original `nums1`, while `n` represents the number of elements in `nums2`.
-   - We begin by setting `last` to point to the end of the valid elements in `nums1`, which are the first `m` elements.
-
-   ```cpp
-   auto last = nums1.begin() + m;
-   ```
-
-### 2. **Iterate Over `nums2`**:
-   - For each element in `nums2`, we find its correct position in `nums1` using `std::lower_bound`. This function performs a binary search to find the first position where the element can fit in the sorted order.
-   - If the position is equal to `last`, it means the element should be appended to the end of the current valid portion of `nums1`.
+   - The first array, `nums1`, has enough space to accommodate all elements from both `nums1` and `nums2`. The variable `m` represents the number of valid elements in `nums1`, while `n` represents the number of elements in `nums2`.
+   - The `middle` iterator points to the end of the valid elements in `nums1` (after `m` elements).
    
    ```cpp
-   auto it = std::lower_bound(nums1.begin(), last, num);
-   if (it == last)
-       *it = num;
+   auto middle = std::next(nums1.begin(), m);
    ```
 
-### 3. **Shifting Elements**:
-   - If the element is not placed at the end, we need to shift the elements in `nums1` to make room for the new element. The `shift` function takes care of moving elements from `it` to `last` to the right by one position.
+### 2. **Copy Elements from `nums2` into `nums1`**:
+   - We begin by copying elements from `nums2` into the trailing empty space in `nums1`, starting from the position pointed to by `middle`. We iterate through `nums2` and place its elements into `nums1`.
    
    ```cpp
-   else {
-       shift(it, last);
-       *it = num;
-   }
+   auto it2 = nums2.begin();
+   for (auto it = middle; it != nums1.end(); ++it)
+       *it = *it2++;
    ```
 
-   - The `shift` function shifts elements to the right by iterating backward from `last` to `first` and moving each element to the next position.
-
+### 3. **In-place Merge**:
+   - After filling in the elements from `nums2`, we use the `std::inplace_merge` function to merge the two sorted sections of `nums1` (the first `m` elements and the next `n` elements) into a single sorted sequence.
+   
    ```cpp
-   template <typename BidirIt>
-   void shift(BidirIt first, BidirIt last) {
-       auto prev = std::prev(last);
-
-       while (last != first) {
-           *last = std::move(*prev);
-           --last, --prev;
-       }
-   }
+   std::inplace_merge(nums1.begin(), middle, nums1.end());
    ```
 
 ### 4. **Return the Merged Array**:
-   - After processing all elements from `nums2`, the merged result is stored in `nums1`, which is then returned.
-
+   - Once the merge operation is complete, the merged result is stored in `nums1`, and we return the merged array.
+   
    ```cpp
    return nums1;
    ```
 
 ## Key Insights:
 
-- **Lower Bound**:  
-  The `std::lower_bound` function helps find the correct position in the sorted portion of `nums1` for each element in `nums2` in logarithmic time, ensuring efficient placement of elements.
-
-- **Efficient Shifting**:  
-  The `shift` function handles the rearrangement of elements in `nums1` without requiring additional space. It efficiently shifts elements one by one from the back of the array to the front to make space for new elements.
-
-- **Edge Case Handling**:
-  - The solution handles edge cases such as when `nums2` is empty (no elements to merge) or when `nums1` is empty (all elements come from `nums2`).
-  - It also handles cases where `nums1` is already fully populated or when `nums2` has fewer elements than `nums1`.
+- **In-place Merge**:  
+  The `std::inplace_merge` function performs a merge operation directly on the original array without requiring extra memory. It merges two adjacent sorted ranges into one, preserving their order.
+  
+- **Efficient Copying**:  
+  By copying elements from `nums2` into the available space at the end of `nums1`, we prepare `nums1` for the merge, minimizing the number of operations required.
+  
+- **Edge Case Handling**:  
+  - The solution handles edge cases like when `nums2` is empty or when `nums1` is empty (all elements come from `nums2`).
+  - If `nums1` already contains the correct elements or if `nums2` is empty, the merge still works seamlessly.
 
 - **Time and Space Complexity**:
-  - **Time Complexity**: The algorithm runs in **O(n*m)** time because for each element in `nums2`, we perform a `std::lower_bound` operation on `nums1`, which takes **O(log m)** time, and the total number of such operations is **n**.
-  - **Space Complexity**: The space complexity is **O(1)**, as the algorithm modifies `nums1` in place without using additional data structures.
+  - **Time Complexity**: The algorithm runs in **O((m + n) log(m + n))** time due to the `std::inplace_merge` operation. The merge operation takes linear time, and `std::inplace_merge` performs the merge in logarithmic time, so the total time complexity is dominated by the merge step.
+  - **Space Complexity**: The space complexity is **O(1)**, as the algorithm performs the merge in-place without additional data structures.
 
 ## Final Thoughts:
 
-This solution efficiently merges two sorted arrays using a combination of the **lower bound** and **shifting** techniques. It optimizes the insertion of elements from `nums2` into `nums1`, making it both time-efficient and space-efficient. The approach handles a variety of edge cases and ensures that the final merged array is sorted without requiring additional memory allocation.
+This solution provides a simple and efficient approach to merging two sorted arrays. By leveraging the `std::inplace_merge` function, we ensure the merging process is done in-place, making the solution both time-efficient and space-efficient. The method handles a variety of edge cases and performs well even for larger arrays.

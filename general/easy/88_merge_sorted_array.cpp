@@ -6,31 +6,16 @@ class Solution {
    public:
     std::vector<int> merge(std::vector<int>&& nums1, int m,
                            std::vector<int>&& nums2, [[maybe_unused]] int n) {
-        auto last = nums1.begin() + m;
+        auto middle = std::next(nums1.begin(), m);
+        
+        auto it2 = nums2.begin();
+        for(auto it = middle; it != nums1.end(); ++it)
+            *it = *it2++;
 
-        for (const auto& num : nums2) {
-            auto it = std::lower_bound(nums1.begin(), last, num);
-            if (it == last)
-                *it = num;
-            else {
-                shift(it, last);
-                *it = num;
-            }
-            ++last;
-        }
+        // inplace merge
+        std::inplace_merge(nums1.begin(), middle, nums1.end());
 
         return nums1;
-    }
-
-   private:
-    template <typename BidirIt>
-    void shift(BidirIt first, BidirIt last) {
-        auto prev = std::prev(last);
-
-        while (last != first) {
-            *last = std::move(*prev);
-            --last, --prev;
-        }
     }
 };
 
