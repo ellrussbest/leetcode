@@ -4,28 +4,11 @@
 class Solution {
 public:
     int search(const std::vector<int>& nums, int target) {
-        auto first = nums.begin();
-        auto last = nums.end();
-        auto count = std::distance(first, last);
-
-        while(count > 0) {
-            auto it = first;
-            auto step = count / 2;
-            std::advance(it, step);
-
-            if(*it < target) {
-                first = ++it;
-                count -= step + 1;
-            }else
-                count = step;
-        }
-
-        bool is_found = (!(first == last) && !(target < *first));
-
-        if(is_found)
-            return static_cast<int>(std::distance(nums.begin(), first));
-        else
+        auto it = std::lower_bound(nums.begin(), nums.end(), target);
+        if(it == nums.end() || target < *it)
             return -1;
+        
+        return static_cast<int>(std::distance(nums.begin(), it));
     }
 };
 

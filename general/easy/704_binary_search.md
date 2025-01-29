@@ -1,63 +1,43 @@
-# Binary Search Solution: Intuition
+# Binary Search Solution
 
-This solution performs a binary search on a sorted vector `nums` to find the position of a `target` value. If the target exists, the index of the target in the vector is returned. If not, `-1` is returned.
+This solution uses the `std::lower_bound` function from the C++ Standard Library to find the index of a `target` value in a sorted vector `nums`. If the target exists in the vector, its index is returned. If the target is not found, `-1` is returned.
 
 ## Step-by-Step Explanation:
 
-1. **Initialization**:
-   - We define two iterators: `first` and `last`, which represent the range of indices in the vector `nums` to be searched. We also calculate the total number of elements, `count`, by taking the distance between `first` and `last`.
-
+1. **Using `std::lower_bound`**:
+   - `std::lower_bound` is used to find the first element that is **not less than** the target value. It returns an iterator pointing to the target if it's found, or to the position where the target should be inserted if it doesn't exist.
+   
    ```cpp
-   auto first = nums.begin();
-   auto last = nums.end();
-   auto count = std::distance(first, last);
+   auto it = std::lower_bound(nums.begin(), nums.end(), target);
    ```
+   
+   - The iterator `it` will either:
+     - Point to the target value if it exists in the vector.
+     - Point to the first element larger than the target, or `nums.end()` if no such element exists.
 
-2. **Binary Search Loop**:
-   - We perform the binary search in a `while` loop, which continues as long as there are elements to search (`count > 0`).
-   - In each iteration:
-     - We calculate the middle point (`step`), and move the `first` iterator to the middle using `std::advance`.
-     - If the element at the middle point is less than the target, we move the `first` iterator to the right of the middle point and reduce the search range (`count -= step + 1`).
-     - If the element at the middle point is greater than or equal to the target, we shrink the search range to just the left half (`count = step`).
-
+2. **Checking if the Target Exists**:
+   - After finding the iterator with `std::lower_bound`, we check if:
+     - The iterator equals `nums.end()`, indicating the target is greater than all elements in the vector.
+     - The target is less than the element pointed to by the iterator.
+   
    ```cpp
-   while(count > 0) {
-       auto it = first;
-       auto step = count / 2;
-       std::advance(it, step);
-
-       if(*it < target) {
-           first = ++it;
-           count -= step + 1;
-       } else {
-           count = step;
-       }
-   }
-   ```
-
-3. **Check if Target is Found**:
-   - After the loop, we check if the `first` iterator is still valid and points to the target. If the target is found, we return the index of `first` relative to the beginning of `nums`. If not, we return `-1`.
-
-   ```cpp
-   bool is_found = (!(first == last) && !(target < *first));
-
-   if(is_found)
-       return static_cast<int>(std::distance(nums.begin(), first));
-   else
+   if(it == nums.end() || target < *it)
        return -1;
    ```
 
-4. **Return Result**:
-   - The result of the search is returned. If the target was found, we return its index; otherwise, we return `-1`.
+   - If either condition is true, the target isn't present, and `-1` is returned. If neither condition is true, the iterator points to the target, and we proceed to the next step.
 
+3. **Returning the Index**:
+   - If the target is found, we compute its index by calculating the distance from the beginning of the vector to the iterator using `std::distance`.
+   
    ```cpp
-   return -1;
+   return static_cast<int>(std::distance(nums.begin(), it));
    ```
 
-5. **Example Usage**:
-   - In the `main` function, we test the `search` function on two cases:
-     - First, searching for `9` in the vector `{-1, 0, 3, 5, 9, 12}`. The result is `4`, the index of `9`.
-     - Second, searching for `2` in the same vector. Since `2` is not found, the result is `-1`.
+4. **Example Usage**:
+   - The `main` function demonstrates how to use the `search` method:
+     - Searching for `9` in the vector `{-1, 0, 3, 5, 9, 12}` returns `4` since `9` is located at index `4`.
+     - Searching for `2` in the same vector returns `-1` since `2` is not present.
 
    ```cpp
    std::cout << Solution{}.search({-1, 0, 3, 5, 9, 12}, 9) << "\n";  // Output: 4
@@ -66,21 +46,18 @@ This solution performs a binary search on a sorted vector `nums` to find the pos
 
 ## Space and Time Complexity:
 
-- **Time Complexity**: The time complexity is **O(log n)** because in each iteration of the binary search, the search space is halved. This makes it much more efficient than a linear search, especially for large inputs.
+- **Time Complexity**: The time complexity is **O(log n)** due to the underlying binary search implemented by `std::lower_bound`. This makes the search process efficient even for large datasets.
   
-- **Space Complexity**: The space complexity is **O(1)**, as we only use a few additional variables for storing iterators and the count, regardless of the input size.
+- **Space Complexity**: The space complexity is **O(1)** since the algorithm only uses a few variables for the iterator and index calculation, regardless of the size of the input.
 
 ## Key Insights:
 
-- **Binary Search**:
-  - The binary search approach splits the search space in half at each step, reducing the problem size exponentially. This results in a time complexity of **O(log n)**, making it very efficient for large datasets.
+- **Efficient Search**: `std::lower_bound` performs a binary search internally, allowing for fast searching with a time complexity of **O(log n)**.
+  
+- **Iterator-Based Access**: By using iterators and `std::distance`, this solution avoids the need for direct index manipulation, which can lead to cleaner and safer code.
 
-- **Iterator Arithmetic**:
-  - Instead of using explicit index-based access, iterators are used to navigate through the vector. This avoids any potential issues with manual index manipulation and provides cleaner code.
-
-- **Efficiency**:
-  - The algorithm performs a minimal number of operations to determine the presence of the target. By reducing the search space in each iteration, we ensure that the search is efficient even for large vectors.
+- **Simpler Code**: This approach significantly simplifies the implementation by leveraging a built-in C++ function for binary search rather than manually handling the logic.
 
 ## Final Thoughts:
 
-This binary search solution provides an efficient method for finding the index of a target in a sorted vector with **O(log n)** time complexity and **O(1)** space complexity. It leverages iterators for cleaner code and ensures that the search is performed in the most efficient manner possible.
+This solution provides a concise and efficient way to search for a target in a sorted vector using **O(log n)** time complexity and **O(1)** space complexity. By utilizing `std::lower_bound`, we simplify the code while maintaining performance and ensuring correctness.
